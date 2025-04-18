@@ -1,7 +1,8 @@
-console.log("Xnay: nixxing violence from X");
+// console.log("Xnay: nixxing violence from X");
 
 let allKeywords = [];
 
+// Filters tweets by checking for keywords and blurring those that match
 function filterPosts() {
   const posts = document.querySelectorAll('article[data-testid="tweet"]');
   posts.forEach(post => {
@@ -13,6 +14,7 @@ function filterPosts() {
   });
 }
 
+// Loads keywords from storage and applies post filtering
 function loadKeywordsAndFilter() {
   chrome.storage.sync.get(["userKeywords"], ({ userKeywords = [] }) => {
     allKeywords = [
