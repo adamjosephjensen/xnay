@@ -1,5 +1,4 @@
-// console.log("Xnay: nixxing violence from X");
-
+console.log("Xnay loaded");
 let allKeywords = [];
 
 // Filters tweets by checking for keywords and blurring those that match
