@@ -10,21 +10,3 @@ aider prompt: “in content.js, read media filter settings from chrome.storage.s
 files: content.js
 deliverable: media filters that hide or isolate images/videos in posts.
 check: on x.com, toggle “hide videos” in popup, confirm videos blur or disappear while images remain.
-task 3: update manifest.json for storage
-why: ensures storage permission is explicit (already likely present, but double-check).
-aider prompt: “in manifest.json, ensure ‘storage’ is included in permissions. confirm content_scripts and other settings are unchanged.”
-files: manifest.json
-deliverable: updated manifest with required permissions.
-check: reload extension, confirm no permission errors in chrome console.
-task 4: start dev set collection
-why: logs posts for your dev set to eval regex and train ml later, addressing your need for data before regex tweaks.
-aider prompt: “in content.js, add logging to chrome.storage.local for all posts processed by filterPosts. log post text (first 200 chars), matched keywords (if any), and whether it was hidden. add a ‘download log’ button to popup.html and popup.js to export logs as json.”
-files: content.js, popup.html, popup.js
-deliverable: a system to log posts and download as json for labeling.
-check: browse x.com, click “download log” in popup, verify json file contains post data.
-task 5: test and debug
-why: ensures media filters and logging work reliably across x.com.
-aider prompt: “in content.js, add console logs to debug media filter application (e.g., ‘hiding image in post’). test selectors for img and video in article[data-testid=’tweet’]. ensure mutationobserver handles dynamic content. fix any bugs in popup.js for settings or log download.”
-files: content.js, popup.js
-deliverable: bug-free media filtering and logging.
-check: test all toggles on x.com timeline/search, confirm logs in console and json export.
