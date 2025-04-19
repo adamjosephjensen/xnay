@@ -1,29 +1,62 @@
 console.log("Xnay loaded");
 let allKeywords = [];
+let hideImages = false;
+let hideVideos = false;
+let imagesOnly = false;
+let videosOnly = false;
 
-// Filters tweets by checking for keywords and blurring those that match
+// Filters tweets by checking for keywords and media settings
 function filterPosts() {
   console.log("Filtering posts with keywords:", allKeywords);  // Debug log
+  console.log("Media settings: hideImages=", hideImages, "hideVideos=", hideVideos, "imagesOnly=", imagesOnly, "videosOnly=", videosOnly);  // Debug log
   const posts = document.querySelectorAll('article[data-testid="tweet"]');
+  
   posts.forEach(post => {
     const text = post.innerText.toLowerCase();
-    const shouldHide = allKeywords.some(keyword => 
-      text.includes(keyword.toLowerCase())
-    );
-    post.style.filter = shouldHide ? "blur(5px)" : "none";  // Reset or blur
-    console.log(`Post text: "${text.substring(0, 50)}..." shouldHide: ${shouldHide}`);  // Debug log for each post
+    const shouldHideByKeyword = allKeywords.some(keyword => text.includes(keyword.toLowerCase()));
+    
+    // Apply keyword filtering
+    post.style.filter = shouldHideByKeyword ? "blur(5px)" : "none";
+    
+    // Apply media filtering
+    const imagesInPost = post.querySelectorAll('img').length > 0;
+    const videosInPost = post.querySelectorAll('video').length > 0;
+    
+    if (hideImages) {
+      post.querySelectorAll('img').forEach(img => img.style.display = 'none');
+    } else {
+      post.querySelectorAll('img').forEach(img => img.style.display = '');  // Reset
+    }
+    
+    if (hideVideos) {
+      post.querySelectorAll('video').forEach(video => video.style.display = 'none');
+    } else {
+      post.querySelectorAll('video').forEach(video => video.style.display = '');  // Reset
+    }
+    
+    if (imagesOnly && !imagesInPost) {
+      post.style.display = 'none';  // Hide post if no images
+    } else if (videosOnly && !videosInPost) {
+      post.style.display = 'none';  // Hide post if no videos
+    } else {
+      post.style.display = '';  // Ensure post is visible
+    }
+    
+    console.log(`Post text: "${text.substring(0, 50)}..." shouldHideByKeyword: ${shouldHideByKeyword}, images: ${imagesInPost}, videos: ${videosInPost}`);  // Debug log
   });
 }
 
-// Loads keywords from storage and applies post filtering
+// Loads keywords and settings from storage and applies post filtering
 function loadKeywordsAndFilter() {
-  console.log("Loading keywords from storage...");  // Debug log
-  chrome.storage.sync.get(["userKeywords"], ({ userKeywords = [] }) => {
-    // Removed undefined blockKeywords to fix error
-    allKeywords = [
-      ...userKeywords  // Only use userKeywords for now
-    ];
-    console.log("Keywords loaded:", allKeywords);  // Debug log
+  console.log("Loading keywords and settings from storage...");  // Debug log
+  chrome.storage.sync.get(["userKeywords", "hideImages", "hideVideos", "imagesOnly", "videosOnly"], (data) => {
+    allKeywords = data.userKeywords || [];
+    hideImages = data.hideImages || false;
+    hideVideos = data.hideVideos || false;
+    imagesOnly = data.imagesOnly || false;
+    videosOnly = data.videosOnly || false;
+    
+    console.log("Keywords and settings loaded:", { allKeywords, hideImages, hideVideos, imagesOnly, videosOnly });  // Debug log
     filterPosts();
   });
 }

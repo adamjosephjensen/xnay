@@ -6,11 +6,30 @@
     body { width: 300px; padding: 10px; font-family: Arial; }
     textarea { width: 100%; height: 100px; }
     button { margin-top: 10px; }
+    .checkbox-group {
+      margin-top: 10px;
+    }
+    .checkbox-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
   </style>
 </head>
 <body>
   <h3>X Content Filter</h3>
   <textarea id="customKeywords" placeholder="One keyword per line"></textarea>
+  
+  <div class="checkbox-group">
+    <label><input type="checkbox" id="hideImages"> Hide Images</label>
+    <label><input type="checkbox" id="hideVideos"> Hide Videos</label>
+    <label><input type="checkbox" id="imagesOnly"> Images Only</label>
+    <label><input type="checkbox" id="videosOnly"> Videos Only</label>
+  </div>
+  
   <button id="save">Save</button>
   <script src="popup.js"></script>
 </body>

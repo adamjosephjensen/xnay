@@ -2,25 +2,40 @@ document.getElementById("save").addEventListener("click", () => {
   const keywords = document.getElementById("customKeywords").value
     .split("\n")
     .filter(k => k.trim());
-  chrome.storage.sync.set({ userKeywords: keywords }, () => {
-    alert("Keywords saved!");
-  });
-});
-
-// Load existing keywords
-chrome.storage.sync.get(["userKeywords"], ({ userKeywords }) => {
-  if (userKeywords) {
-    document.getElementById("customKeywords").value = userKeywords.join("\n");
-  }
-});
-
-// notify extension that user has changed the keywords
-document.getElementById("save").addEventListener("click", () => {
-  const keywords = document.getElementById("customKeywords").value
-    .split("\n")
-    .filter(k => k.trim());
-  chrome.storage.sync.set({ userKeywords: keywords }, () => {
-    alert("Keywords saved!");
+  
+  const settings = {
+    userKeywords: keywords,
+    hideImages: document.getElementById("hideImages").checked,
+    hideVideos: document.getElementById("hideVideos").checked,
+    imagesOnly: document.getElementById("imagesOnly").checked,
+    videosOnly: document.getElementById("videosOnly").checked
+  };
+  
+  chrome.storage.sync.set(settings, () => {
+    alert("Keywords and settings saved!");
     chrome.runtime.sendMessage({ action: "updateFilter" });
   });
+});
+
+// Load existing keywords and settings
+chrome.storage.sync.get(["userKeywords", "hideImages", "hideVideos", "imagesOnly", "videosOnly"], (data) => {
+  if (data.userKeywords) {
+    document.getElementById("customKeywords").value = data.userKeywords.join("\n");
+  }
+  
+  if (data.hideImages !== undefined) {
+    document.getElementById("hideImages").checked = data.hideImages;
+  }
+  
+  if (data.hideVideos !== undefined) {
+    document.getElementById("hideVideos").checked = data.hideVideos;
+  }
+  
+  if (data.imagesOnly !== undefined) {
+    document.getElementById("imagesOnly").checked = data.imagesOnly;
+  }
+  
+  if (data.videosOnly !== undefined) {
+    document.getElementById("videosOnly").checked = data.videosOnly;
+  }
 });
