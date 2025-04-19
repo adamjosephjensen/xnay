@@ -2,13 +2,11 @@ console.log("Xnay loaded");
 let allKeywords = [];
 let hideImages = false;
 let hideVideos = false;
-let imagesOnly = false;
-let videosOnly = false;
 
 // Filters tweets by checking for keywords and media settings
 function filterPosts() {
   console.log("Filtering posts with keywords:", allKeywords);  // Debug log
-  console.log("Media settings: hideImages=", hideImages, "hideVideos=", hideVideos, "imagesOnly=", imagesOnly, "videosOnly=", videosOnly);  // Debug log
+  console.log("Media settings: hideImages=", hideImages, "hideVideos=", hideVideos);  // Debug log
   const posts = document.querySelectorAll('article[data-testid="tweet"]');
   
   posts.forEach(post => {
@@ -36,14 +34,6 @@ function filterPosts() {
       post.querySelectorAll('video').forEach(video => video.style.display = '');  // Reset
     }
     
-    if (imagesOnly && !imagesInPost) {
-      post.style.display = 'none';  // Hide post if no images
-    } else if (videosOnly && !videosInPost) {
-      post.style.display = 'none';  // Hide post if no videos
-    } else {
-      post.style.display = '';  // Ensure post is visible
-    }
-    
     console.log(`Post text: "${text.substring(0, 50)}..." shouldHideByKeyword: ${shouldHideByKeyword}, images: ${imagesInPost}, videos: ${videosInPost}`);  // Debug log
   });
 }
@@ -51,14 +41,12 @@ function filterPosts() {
 // Loads keywords and settings from storage and applies post filtering
 function loadKeywordsAndFilter() {
   console.log("Loading keywords and settings from storage...");  // Debug log
-  chrome.storage.sync.get(["userKeywords", "hideImages", "hideVideos", "imagesOnly", "videosOnly"], (data) => {
+  chrome.storage.sync.get(["userKeywords", "hideImages", "hideVideos"], (data) => {
     allKeywords = data.userKeywords || [];
     hideImages = data.hideImages || false;
     hideVideos = data.hideVideos || false;
-    imagesOnly = data.imagesOnly || false;
-    videosOnly = data.videosOnly || false;
     
-    console.log("Keywords and settings loaded:", { allKeywords, hideImages, hideVideos, imagesOnly, videosOnly });  // Debug log
+    console.log("Keywords and settings loaded:", { allKeywords, hideImages, hideVideos });  // Debug log
     filterPosts();
   });
 }

@@ -6,9 +6,7 @@ document.getElementById("save").addEventListener("click", () => {
   const settings = {
     userKeywords: keywords,
     hideImages: document.getElementById("hideImages").checked,
-    hideVideos: document.getElementById("hideVideos").checked,
-    imagesOnly: document.getElementById("imagesOnly").checked,
-    videosOnly: document.getElementById("videosOnly").checked
+    hideVideos: document.getElementById("hideVideos").checked
   };
   
   chrome.storage.sync.set(settings, () => {
@@ -18,7 +16,7 @@ document.getElementById("save").addEventListener("click", () => {
 });
 
 // Load existing keywords and settings
-chrome.storage.sync.get(["userKeywords", "hideImages", "hideVideos", "imagesOnly", "videosOnly"], (data) => {
+chrome.storage.sync.get(["userKeywords", "hideImages", "hideVideos"], (data) => {
   if (data.userKeywords) {
     document.getElementById("customKeywords").value = data.userKeywords.join("\n");
   }
@@ -29,13 +27,5 @@ chrome.storage.sync.get(["userKeywords", "hideImages", "hideVideos", "imagesOnly
   
   if (data.hideVideos !== undefined) {
     document.getElementById("hideVideos").checked = data.hideVideos;
-  }
-  
-  if (data.imagesOnly !== undefined) {
-    document.getElementById("imagesOnly").checked = data.imagesOnly;
-  }
-  
-  if (data.videosOnly !== undefined) {
-    document.getElementById("videosOnly").checked = data.videosOnly;
   }
 });
