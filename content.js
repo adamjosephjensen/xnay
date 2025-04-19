@@ -16,7 +16,9 @@ function filterPosts() {
     const shouldHideByKeyword = allKeywords.some(keyword => text.includes(keyword.toLowerCase()));
     
     // Apply keyword filtering
-    post.style.filter = shouldHideByKeyword ? "blur(5px)" : "none";
+    if (shouldHideByKeyword) {
+      post.style.diplay = "none";
+    }
     
     // Apply media filtering
     const imagesInPost = post.querySelectorAll('img').length > 0;
